@@ -1,0 +1,17 @@
+data
+
+*.csv
+
+*.json
+
+!strategy_config.json
+
+**/__pycache__/
+
+.idea
+
+*.xml
+
+.vscode
+
+*.txt
