@@ -33,7 +33,7 @@ from rework_backtrader.utils.category_elastic_reader import categoryElasticReade
 from pandas.api.types import is_numeric_dtype
 import sys
 from datetime import timedelta
-import factor_processing
+from config import *
 from factor_processing import *
 import warnings
 # Ignore all warnings
@@ -43,10 +43,10 @@ from scipy.special import softmax
 
 #------------------------------------------------
 
-# importing package
-import matplotlib.pyplot as plt
-import numpy as np
- 
+integrated_crowding = pd.read_csv(f'{DAILY_DATA_FOLDER}/integrated_scores_{to_time}.csv', parse_dates=['Date'], index_col=0)
+time_crowding = pd.read_csv(f'{DAILY_DATA_FOLDER}/time_scores_{to_time}.csv', parse_dates=['Date'], index_col=0)
+cross_crowding = pd.read_csv(f'{DAILY_DATA_FOLDER}/cross_scores_{to_time}.csv', parse_dates=['Date'], index_col=0)
+
 # create data
 x = integrated_crowding.sort_values(by = integrated_crowding.index[-1], axis = 1).iloc[:,-20:].columns
 time = time_crowding.loc[integrated_crowding.index[-1],x]
@@ -136,7 +136,7 @@ plt.show()
 
 
 # CROSS-SECTIONAL CROWDING
-all_scores_grouped = factor_processing.all_scores_grouped
+all_scores_grouped = all_scores_grouped
 value_cross = {}
 liquidity_cross = {}
 volatility_cross = {}

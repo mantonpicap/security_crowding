@@ -39,16 +39,17 @@ import warnings
 warnings.filterwarnings("ignore")
 from sklearn.preprocessing import MinMaxScaler
 from scipy.special import softmax
+from config import *
 
 # IMPORT ALL_SCORES AND PREPROCESSING___________________________________
 
 n=120
 from_time = '2018-01-01'
 to_time = (date.today()).strftime("%Y-%m-%d")
-all_scores = pd.read_csv(f'/home/trieu-man/Documents/Code/output/all_scores_{n}_{to_time}.csv', parse_dates=['Date'], index_col=['Date'])
+all_scores = pd.read_csv(f'{DAILY_DATA_FOLDER}/all_scores_{n}_{to_time}.csv', parse_dates=['Date'], index_col=['Date'])
 all_scores_grouped = all_scores.groupby('Ticker')
 
-top120_industry = pd.read_csv(f'/home/trieu-man/Documents/Code/output/top{n}_industry_{to_time}.csv',index_col=0)
+top120_industry = pd.read_csv(f'{DAILY_DATA_FOLDER}/top{n}_industry_{to_time}.csv',index_col=0)
 top120_industry = top120_industry[top120_industry.name != 'BAF']
 stocks_industry = {}
 industries = top120_industry[top120_industry.name.isin(all_scores.Ticker.unique())].lv1.unique()
@@ -247,32 +248,4 @@ def momentum_time_crowding(tickers):
     momentum_time_crowding.index = pd.to_datetime(momentum_time_crowding.index)
     return momentum_time_crowding
 
-# INTEGRATING FACTOR SCORES___________________________________
 
-## CROSS-SECTIONAL CROWDING
-cross_crowding = {}
-tickers = top120_industry[top120_industry.name.isin(all_scores.Ticker.unique())].name.tolist()
-for ticker in tickers:
-    ticker_scores = all_scores_grouped.get_group(ticker)
-    if ticker_scores.count().max() >= 500:
-        cross_crowding[ticker] = (liquidity_cross_crowding(ticker_scores)+ 7*value_cross_crowding(ticker_scores)+
-                                volatility_cross_crowding(ticker_scores)+ momentum_cross_crowding(ticker_scores))/10
-    # else:
-    #     print(ticker)
-    #     print(ticker_scores.count().max())
-cross_crowding = pd.DataFrame(cross_crowding)
-cross_crowding = cross_crowding.dropna(axis=1, subset=cross_crowding.index[-1])
-
-## TIME-SERIES CROWDING
-time_crowding = (7*value_time_crowding() + liquidity_time_crowding(cross_crowding.columns) + 
-                 volatility_time_crowding(cross_crowding.columns) + momentum_time_crowding(cross_crowding.columns))/10
-# time_crowding = time_crowding[cross_crowding.columns]
-time_crowding = time_crowding[cross_crowding.columns]
-time_crowding = time_crowding.dropna(axis=1, subset=time_crowding.index[-1])
-
-
-## INTEGRATED CROWDING
-integrated_crowding = (cross_crowding + time_crowding)
-integrated_crowding = integrated_crowding.dropna(axis=1, subset=integrated_crowding.index[-1])
-
-integrated_crowding.to_csv(f'/home/trieu-man/Documents/Code/multi_factor_risk/security_crowding/integrated_scores_{to_time}.csv')

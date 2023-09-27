@@ -33,8 +33,8 @@ from rework_backtrader.utils.category_elastic_reader import categoryElasticReade
 from pandas.api.types import is_numeric_dtype
 import sys
 from datetime import timedelta
-import factor_processing
-from factor_processing import *
+# from factor_processing import *
+from config import *
 # import security_crowding.security_crowding as security_crowding
 # from security_crowding.security_crowding import *
 import warnings
@@ -42,6 +42,7 @@ import warnings
 warnings.filterwarnings("ignore")
 from sklearn.preprocessing import MinMaxScaler
 from scipy.special import softmax
+
 
 # DEFINE FUNCTIONS OF QUINTILE PORTFOLIOS___________________________________
 
@@ -107,6 +108,14 @@ def calculate_next_week_cumulative_return(factor_portfolios, stock_returns):
             cumulative_returns[quintile] = cumulative_portfolio_return.cumsum()
         next_week_cumulative_returns[week_start.strftime('%Y-%m-%d')] = cumulative_returns
     return next_week_cumulative_returns
+
+from_time = '2018-01-01'
+to_time = (date.today()).strftime("%Y-%m-%d")
+
+integrated_crowding = pd.read_csv(f'{DAILY_DATA_FOLDER}/integrated_scores_{to_time}.csv', parse_dates=['Date'], index_col=0)
+time_crowding = pd.read_csv(f'{DAILY_DATA_FOLDER}/time_scores_{to_time}.csv', parse_dates=['Date'], index_col=0)
+cross_crowding = pd.read_csv(f'{DAILY_DATA_FOLDER}/cross_scores_{to_time}.csv', parse_dates=['Date'], index_col=0)
+
 
 # create quintile portfolios by ranking integrated scores
 weekly_averages = integrated_crowding.resample('W-MON').mean()

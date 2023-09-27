@@ -10,6 +10,7 @@ import copy
 import pandas as pd
 import numpy as np
 import glob
+import tabulate
 from tabulate import tabulate
 import requests
 from datetime import timedelta
@@ -21,6 +22,7 @@ import warnings
 # Ignore all warnings
 warnings.filterwarnings("ignore")
 from pandas.tseries.offsets import BDay
+from config import *
 
 def quarterly_to_yearly(series,quarterReport):
     # quarterReport=df_combine['quarterReport']
@@ -619,14 +621,14 @@ sorted_mktcap = dict(sorted(dict_mktcap.items(), key=lambda item: item[1],revers
 top_n = [i for i in sorted_mktcap.keys()]
 top_n = pd.DataFrame(top_n)
 top_n.columns = ['name']
-top_n.to_csv(f'/home/trieu-man/Documents/Code/output/top_{n}_{to_time}.csv')
+top_n.to_csv(f'{DAILY_DATA_FOLDER}/top_{n}_{to_time}.csv')
 print(top_n)
 
-all_stocks_industry_vietstock = pd.read_csv('/home/trieu-man/Documents/Code/multi_factor_risk/category_vietstock.csv',index_col='number')
+all_stocks_industry_vietstock = pd.read_csv(f'{DATA_FOLDER}/category_vietstock.csv',index_col='number')
 # all_stocks_industry = pd.merge(all_stocks_industry_mirae, all_stocks_industry_vietstock, on=['name'])
 all_stocks_industry = all_stocks_industry_vietstock
 top120_industry = pd.merge(all_stocks_industry, top_n, on='name')
-top120_industry.to_csv(f'/home/trieu-man/Documents/Code/output/top{n}_industry_{to_time}.csv')
+top120_industry.to_csv(f'{DAILY_DATA_FOLDER}/top{n}_industry_{to_time}.csv')
 
 all_scores = calculate_barra_descriptor_for_all_stocks(top_n['name'].values, from_time=from_time, to_time=to_time)
 # Compute global mean and standard deviation scores
@@ -659,7 +661,7 @@ all_scores['momentum'] = all_scores[['relative_strength','LTRS','STRS']].mean(ax
 all_scores['quality'] = all_scores[['ATO', 'GPM', 'ROA', 'ROE','DTOA', 'MLEV', 'BLEV',
                                         'AGRO', 'IGRO', 'CXGRO','ABS', 'ACF','VSAL', 'VERN', 'VFLO']].mean(axis=1)
 all_scores['volatility'] = all_scores[['HSIGMA', 'DASTD', 'CMRA','beta']].mean(axis=1)
-all_scores.to_csv(f'/home/trieu-man/Documents/Code/multi_factor_risk/security_crowding/all_scores_{n}_{to_time}.csv')
+all_scores.to_csv(f'{DAILY_DATA_FOLDER}/all_scores_{n}_{to_time}.csv')
 print(all_scores)
 
 # # Refresh backend after calculation

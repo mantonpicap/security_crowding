@@ -2,7 +2,8 @@ This file is for security crowding, logging all variables and functions.
 
 Order of files:
 1. run_daily_fixed_.py - calculate all the lowest level descriptors
-2. factor_processing.py - calculate level 2 factors anf integrating all factor scores
+2. factor_processing.py - calculate level 2 factors integrating all factor scores
+3. factor_integrating.py - integrating all factor scores
 3. security_crowding.py - plots
 4. performance.py - evaluate performance of stocks by quintile portfolios
 
