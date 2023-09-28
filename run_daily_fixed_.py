@@ -624,7 +624,7 @@ top_n.columns = ['name']
 top_n.to_csv(f'{DAILY_DATA_FOLDER}/top_{n}_{to_time}.csv')
 print(top_n)
 
-all_stocks_industry_vietstock = pd.read_csv(f'{DATA_FOLDER}/category_vietstock.csv',index_col='number')
+all_stocks_industry_vietstock = pd.read_csv(f'{DATA_PARENT_FOLDER}/category_vietstock.csv',index_col='number')
 # all_stocks_industry = pd.merge(all_stocks_industry_mirae, all_stocks_industry_vietstock, on=['name'])
 all_stocks_industry = all_stocks_industry_vietstock
 top120_industry = pd.merge(all_stocks_industry, top_n, on='name')
