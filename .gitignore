@@ -1,7 +1,5 @@
 data
 
-*.csv
-
 *.json
 
 !strategy_config.json
