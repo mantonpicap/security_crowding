@@ -51,21 +51,31 @@ tickers = top120_industry[top120_industry.name.isin(all_scores.Ticker.unique())]
 for ticker in tickers:
     ticker_scores = all_scores_grouped.get_group(ticker)
     if ticker_scores.count().max() >= 500:
-        cross_crowding[ticker] = (liquidity_cross_crowding(ticker_scores)+ 7*value_cross_crowding(ticker_scores)+
+        cross_crowding[ticker] = (4*liquidity_cross_crowding(ticker_scores)+ 4*value_cross_crowding(ticker_scores)+
                                 volatility_cross_crowding(ticker_scores)+ momentum_cross_crowding(ticker_scores))/10
     # else:
     #     print(ticker)
     #     print(ticker_scores.count().max())
 cross_crowding = pd.DataFrame(cross_crowding)
 cross_crowding = cross_crowding.dropna(axis=1, subset=cross_crowding.index[-1])
+
+value_cross_crowding(ticker_scores).to_csv(f'{DAILY_DATA_FOLDER}/value_cross_crowding_{to_time}.csv')
+liquidity_cross_crowding(ticker_scores).to_csv(f'{DAILY_DATA_FOLDER}/liquidity_cross_crowding_{to_time}.csv')
+volatility_cross_crowding(ticker_scores).to_csv(f'{DAILY_DATA_FOLDER}/volatility_cross_crowding_{to_time}.csv')
+momentum_cross_crowding(ticker_scores).to_csv(f'{DAILY_DATA_FOLDER}/momentum_cross_crowding_{to_time}.csv')
 cross_crowding.to_csv(f'{DAILY_DATA_FOLDER}/cross_scores_{to_time}.csv')
 
 ## TIME-SERIES CROWDING
-time_crowding = (7*value_time_crowding() + liquidity_time_crowding(cross_crowding.columns) + 
+time_crowding = (4*value_time_crowding() + 4*liquidity_time_crowding(cross_crowding.columns) + 
                  volatility_time_crowding(cross_crowding.columns) + momentum_time_crowding(cross_crowding.columns))/10
 # time_crowding = time_crowding[cross_crowding.columns]
 time_crowding = time_crowding[cross_crowding.columns]
 time_crowding = time_crowding.dropna(axis=1, subset=time_crowding.index[-1])
+
+value_time_crowding().to_csv(f'{DAILY_DATA_FOLDER}/value_time_crowding_{to_time}.csv')
+liquidity_time_crowding(cross_crowding.columns).to_csv(f'{DAILY_DATA_FOLDER}/liquidity_time_crowding_{to_time}.csv')
+volatility_time_crowding(cross_crowding.columns).to_csv(f'{DAILY_DATA_FOLDER}/volatility_time_crowding_{to_time}.csv')
+momentum_time_crowding(cross_crowding.columns).to_csv(f'{DAILY_DATA_FOLDER}/momentum_time_crowding_{to_time}.csv')
 time_crowding.to_csv(f'{DAILY_DATA_FOLDER}/time_scores_{to_time}.csv')
 
 

@@ -67,13 +67,14 @@ for ticker in top120_industry.name.values:
     marketcap[ticker] = pd.read_csv(f'/data/VIETSTOCK_STS/sts_price/{ticker}.csv', parse_dates = ['Date'], index_col='Date')['MarketCap']
 marketcap = pd.DataFrame(marketcap)
 
-value_weights = {}
-for industry in industries:
-    stocks = stocks_industry[industry].name.values
-    value_weights[industry] = [(marketcap[stocks].sum(axis=1).iloc[-1])/marketcap.sum(axis=1).iloc[-1]]
-value_weights = list(value_weights.values())
+## assign weights for value crowding scores by market cap
+# value_weights = {}
+# for industry in industries:
+#     stocks = stocks_industry[industry].name.values
+#     value_weights[industry] = [(marketcap[stocks].sum(axis=1).iloc[-1])/marketcap.sum(axis=1).iloc[-1]]
+# value_weights = list(value_weights.values())
 
-
+value_weights = [1]*len(industries)
 # FACTOR PROCESSING___________________________________
 
 ## VALUE CROSS-SECTIONAL CROWDING
